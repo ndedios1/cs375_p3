@@ -135,6 +135,7 @@ int main(int argc, char* argv[]){
 		else{
 			cout << "third value has incorrect values" << endl;
 		}
+		//getline(input, text);
 		big_index = -1;
 		//getline(input, text);
 	}
