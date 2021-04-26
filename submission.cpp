@@ -14,12 +14,14 @@
 using namespace std;
 
 clock_t time_req;
+vector<Item> result;
 
-void kwf1(vector<Item> &v, int capacity, ofstream &output){
+void kwf2(vector<Item> &v, int capacity, ofstream &output){
+	cout << "went to kwf2" << endl;
+
+}
+int kwf1(vector<Item> &v, int capacity, ofstream &output){
 	cout << "sorting" << endl;
-	/**for(vector<Item>::size_type i=0; i < v.size(); i++){
-		v[i].print();
-	}**/
 	//sorting ratio in vector
 	sort(v.begin(), v.end(), [](Item& lhs, Item& rhs){
 		return lhs.getRatio() > rhs.getRatio();
@@ -30,7 +32,6 @@ void kwf1(vector<Item> &v, int capacity, ofstream &output){
 	int max = v.size();
 	int total_weight =0;
 	int total_profit =0;
-	vector<Item> result;
 	for(int j = 0; j < max; j++){
 		if(total_weight < capacity && (total_weight+v[j].getWeight()) < capacity){
 			total_weight += v[j].getWeight();
@@ -40,14 +41,8 @@ void kwf1(vector<Item> &v, int capacity, ofstream &output){
 	}
 	cout << total_weight << endl;
 	cout << total_profit << endl;
-	float time;
-	time = (float)time_req;
-	output << max << " " << total_profit << " " << time << " ";
-	for(vector<Item>::size_type n=0; n <result.size(); n++){
-		output << result[n].getId() << " ";
-	}
-	output << endl;
-
+	return total_profit;
+	
 }
 
 int main(int argc, char* argv[]){
@@ -98,16 +93,24 @@ int main(int argc, char* argv[]){
 		if(algorithm_type == "0" && correct == true){
 			time_req = clock();
 			cout << "using greedy algorithm 1" << endl;
-			kwf1(library,capacity,output);
-	
+			int maxProfit = kwf1(library,capacity,output);
+			float time;
+			time = (float)time_req;
+			output << num_items << " " << maxProfit << " " << time << " ";
+			for(vector<Item>::size_type n=0; n <result.size(); n++){
+				output << result[n].getId() << " ";
+			}
+			output << endl;
 		}
 		else if(algorithm_type == "1"){
 			cout << "using greedy algorithm 2" << endl;
+			kwf2(library,capacity,output);
 		}
 		else if(algorithm_type == "2"){
 			cout << "using backtracking algorithm" << endl;
 		}
 		library.clear();
+		result.clear();
 		big_index = -1;
 		
 	}
