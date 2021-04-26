@@ -17,8 +17,11 @@ class Item{
 		Item(int w, int p);
 		int getWeight();
 		int getProfit();
+		int getRatio();
+		void print();
 	private:
 		int weight;
 		int profit;
+		int ratio;
 };
 #endif
