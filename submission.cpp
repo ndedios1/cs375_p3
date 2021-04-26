@@ -32,12 +32,12 @@ int main(int argc, char* argv[]){
 	int big_index = -1;
 	vector<Item> library;
 	string text;
-	int num_items = 0;
-	int capacity = 0;
+	//int num_items = 0;
+	//int capacity = 0;
 	clock_t time_req;
 	while(!input.eof()){
-		//int num_items = 0;
-		//int capacity = 0;
+		int num_items = 0;
+		int capacity = 0;
 		if(big_index == -1){
 			if(getline(input, text, ' ')){
 				num_items = stoi(text);
@@ -47,7 +47,9 @@ int main(int argc, char* argv[]){
 				cout << "Knapsack capacity: " << capacity << endl;
 				big_index++;
 			}
+			/**
 			//getline(input, text, ' ');
+			**/
 			for(int i=0; i<num_items; i++){
 				int weight =0;
 				int profit =0;
@@ -59,6 +61,7 @@ int main(int argc, char* argv[]){
 				library.push_back(item);
 			}
 			//getline(input, text);
+			
 
 			big_index++;
 		}
@@ -66,7 +69,8 @@ int main(int argc, char* argv[]){
 		//cout << "After: " << text << endl;
 		//cout << text << endl;
 		//getline(input, text, ' ');
-		/**for(int i=0; i<num_items; i++){
+		/**
+		for(int i=0; i<num_items; i++){
 			int weight =0;
 			int profit =0;
 			getline(input, text, ' ');
@@ -76,8 +80,8 @@ int main(int argc, char* argv[]){
 			Item item = Item(weight, profit, i+1);
 			library.push_back(item);
 		}
-		getline(input, text, ' ');**/
-	
+	//	getline(input, text);
+		**/
 				
 		string algorithm_type = argv[3];
 		if(algorithm_type == "0"){
@@ -111,11 +115,15 @@ int main(int argc, char* argv[]){
 			cout << endl;
 			**/
 			float time;
+			cout << "hi" << endl;
+			
 			time = (float)time_req;
 			output << num_items << " " << total_profit << " " << time << " ";
 			for(vector<Item>::size_type n=0; n <result.size(); n++){
 				output << result[n].getId() << " ";
 			}
+			output << endl;
+			library.clear();
 	
 		}
 		else if(algorithm_type == "1"){
@@ -128,5 +136,6 @@ int main(int argc, char* argv[]){
 			cout << "third value has incorrect values" << endl;
 		}
 		big_index = -1;
+		//getline(input, text);
 	}
 }
