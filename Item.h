@@ -14,14 +14,16 @@ using namespace std;
 class Item{
 	public:
 		Item();
-		Item(int w, int p);
+		Item(int w, int p, int i);
 		int getWeight();
 		int getProfit();
+		int getId();
 		int getRatio();
 		void print();
 	private:
 		int weight;
 		int profit;
+		int id;
 		int ratio;
 };
 #endif
