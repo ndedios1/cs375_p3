@@ -13,18 +13,47 @@
 #include "Item.h"
 using namespace std;
 
+clock_t time_req;
 
-void sortRatio(vector<Item>* v){
+void kwf1(vector<Item> &v, int capacity, ofstream &output){
 	cout << "sorting" << endl;
-	/**
-	sort(v.begin(), v.end(), [](const v& lhs, const v& rhs){
-			return lhs.value < rhs.value;
-	});**/
+	/**for(vector<Item>::size_type i=0; i < v.size(); i++){
+		v[i].print();
+	}**/
+	//sorting ratio in vector
+	sort(v.begin(), v.end(), [](Item& lhs, Item& rhs){
+		return lhs.getRatio() > rhs.getRatio();
+	});
+	for(vector<Item>::size_type i =0; i < v.size(); i++){
+		v[i].print();
+	}
+	int max = v.size();
+	int total_weight =0;
+	int total_profit =0;
+	vector<Item> result;
+	for(int j = 0; j < max; j++){
+		if(total_weight < capacity && (total_weight+v[j].getWeight()) < capacity){
+			total_weight += v[j].getWeight();
+			total_profit += v[j].getProfit();
+			result.push_back(v[j]);
+		}
+	}
+	cout << total_weight << endl;
+	cout << total_profit << endl;
+	float time;
+	time = (float)time_req;
+	output << max << " " << total_profit << " " << time << " ";
+	for(vector<Item>::size_type n=0; n <result.size(); n++){
+		output << result[n].getId() << " ";
+	}
+	output << endl;
+
 }
 
 int main(int argc, char* argv[]){
 	if(argc != 4){
 		cout << "insufficient args" << endl;
+		exit(0);
 	}
 	fstream input(argv[1]);
 	ofstream output;
@@ -34,8 +63,8 @@ int main(int argc, char* argv[]){
 	string text;
 	//int num_items = 0;
 	//int capacity = 0;
-	clock_t time_req;
 	while(!input.eof()){
+		bool correct = false;
 		int num_items = 0;
 		int capacity = 0;
 		if(big_index == -1){
@@ -45,85 +74,31 @@ int main(int argc, char* argv[]){
 				getline(input, text);
 				capacity = stoi(text);
 				cout << "Knapsack capacity: " << capacity << endl;
-				big_index++;
+				cout << "here" << endl;
+				correct = true;
 			}
-			/**
-			//getline(input, text, ' ');
-			**/
-			for(int i=0; i<num_items; i++){
-				int weight =0;
-				int profit =0;
-				getline(input, text, ' ');
-				weight = stoi(text);
-				getline(input, text);
-				profit = stoi(text);
-				Item item = Item(weight, profit, i+1);
-				library.push_back(item);
-			}
-			//getline(input, text);
-			
-
 			big_index++;
+			//correct = true;
 		}
-		//cout << "Before: " << text << endl;
-		//cout << "After: " << text << endl;
-		//cout << text << endl;
-		//getline(input, text, ' ');
-		/**
-		for(int i=0; i<num_items; i++){
-			int weight =0;
-			int profit =0;
+		int index = num_items;
+		int weight = 0;
+		int profit = 0;
+		int id = 1;
+		while(index != 0){
 			getline(input, text, ' ');
 			weight = stoi(text);
 			getline(input, text);
 			profit = stoi(text);
-			Item item = Item(weight, profit, i+1);
+			Item item = Item(weight, profit, id);
+			id++;
 			library.push_back(item);
-		}
-	//	getline(input, text);
-		**/
-				
+			index--;
+		}		
 		string algorithm_type = argv[3];
-		if(algorithm_type == "0"){
+		if(algorithm_type == "0" && correct == true){
 			time_req = clock();
 			cout << "using greedy algorithm 1" << endl;
-			//sortRatio(&library);
-			//sorting ratio in vector
-			sort(library.begin(), library.end(), [](Item& lhs, Item& rhs){
-				return lhs.getRatio() > rhs.getRatio();
-			});
-			for(int k=0; k<num_items; k++){
-				library[k].print();
-			}
-			int max = capacity;
-			int total_weight =0;
-			int total_profit =0;
-			vector<Item> result;
-			for(int j = 0; j < num_items; j++){
-				if(total_weight < max && (total_weight+library[j].getWeight()) < max){
-					total_weight += library[j].getWeight();
-					total_profit += library[j].getProfit();
-					result.push_back(library[j]);
-				}
-			}
-			cout << total_weight << endl;
-			cout << total_profit << endl;
-			/**
-			for(vector<Item>::size_type n =0; n < result.size(); n++){
-				cout << result[n].getId() << " ";
-			}
-			cout << endl;
-			**/
-			float time;
-			cout << "hi" << endl;
-			
-			time = (float)time_req;
-			output << num_items << " " << total_profit << " " << time << " ";
-			for(vector<Item>::size_type n=0; n <result.size(); n++){
-				output << result[n].getId() << " ";
-			}
-			output << endl;
-			library.clear();
+			kwf1(library,capacity,output);
 	
 		}
 		else if(algorithm_type == "1"){
@@ -132,11 +107,11 @@ int main(int argc, char* argv[]){
 		else if(algorithm_type == "2"){
 			cout << "using backtracking algorithm" << endl;
 		}
-		else{
-			cout << "third value has incorrect values" << endl;
-		}
-		//getline(input, text);
+		library.clear();
 		big_index = -1;
-		//getline(input, text);
+		
 	}
+	input.close();
+	output.close();
+	return 0;
 }
