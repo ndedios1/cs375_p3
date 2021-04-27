@@ -15,6 +15,56 @@ using namespace std;
 
 clock_t time_req;
 vector<Item> result;
+int maxB = 0;
+
+void backtrack(vector<Item>&v, int capacity, int n, int max){
+	vector<Item> temp;
+	bool isSolution;
+	int val = 0;
+	maxB = max;
+	for(vector<Item>::size_type  x = n; x < v.size(); x++){
+		if(capacity > 0){
+			if(v[x].getWeight() <= capacity){
+				temp.push_back(v[x]);
+				if(val + v[x].getProfit() >= maxB){
+					maxB = val + v[x].getProfit();
+					isSolution = true;
+				}
+			}
+			if((x+1) < v.size()){
+				backtrack(v, capacity - v[x].getWeight(), x+1, maxB);
+			}
+			else{
+				if(isSolution == true){
+					if(!result.empty()){
+						result.clear();
+						move(temp.begin(), temp.end(), back_inserter(result));
+						temp.clear();
+						isSolution = false;
+					}
+				}
+				else{
+					temp.clear();
+				}
+			return;
+			}
+		}
+		else{
+			if(isSolution == true){
+				if(!result.empty()){
+					result.clear();
+					move(temp.begin(), temp.end(), back_inserter(result));
+					temp.clear();
+					isSolution = false;
+				}
+			}
+			else{
+				temp.clear();
+			}
+			return;
+		}
+	}
+}
 
 int greedy2(vector<Item> &v, int capacity, int greedy_one){
 	int maxProfit= greedy_one;
@@ -128,8 +178,17 @@ int main(int argc, char* argv[]){
 			}
 			output << endl;
 		}
-		else if(algorithm_type == "2"){
-			cout << "using backtracking algorithm" << endl;
+		else if(algorithm_type == "2" && correct == true){
+			time_req = clock();
+			int greedy = greedy1(library, capacity);
+			int prof = greedy2(library, capacity, greedy);
+			backtrack(library,capacity, 0, prof);
+			output << num_items << " " << maxB << " " << time_req << " ";
+			for(vector<Item>::size_type r = 0; r <result.size(); r++){
+				output << result[r].getId() << " ";
+			}
+			output << endl;
+			cout << "finished" << endl;
 		}
 		library.clear();
 		result.clear();
