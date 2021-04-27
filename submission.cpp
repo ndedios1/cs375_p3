@@ -17,7 +17,6 @@ clock_t time_req;
 vector<Item> result;
 
 int greedy2(vector<Item> &v, int capacity, int greedy_one){
-	cout << "went to kwf2" << endl;
 	int maxProfit= greedy_one;
 	Item maxItem;
 	bool found = false;
@@ -36,7 +35,7 @@ int greedy2(vector<Item> &v, int capacity, int greedy_one){
 
 }
 
-int kwf1(vector<Item> &v, int capacity){
+int greedy1(vector<Item> &v, int capacity){
 	//sorting ratio in vector
 	sort(v.begin(), v.end(), [](Item& lhs, Item& rhs){
 		return lhs.getRatio() > rhs.getRatio();
@@ -108,11 +107,10 @@ int main(int argc, char* argv[]){
 		string algorithm_type = argv[3];
 		if(algorithm_type == "0" && correct == true){
 			time_req = clock();
-			cout << "using greedy algorithm 1" << endl;
-			int maxProfit = kwf1(library,capacity);
-			float time;
-			time = (float)time_req;
-			output << num_items << " " << maxProfit << " " << time << " ";
+			int maxProfit = greedy1(library,capacity);
+			//float time;
+			//time = (float)time_req;
+			output << num_items << " " << maxProfit << " " << time_req << " ";
 			for(vector<Item>::size_type n=0; n <result.size(); n++){
 				output << result[n].getId() << " ";
 			}
@@ -120,16 +118,15 @@ int main(int argc, char* argv[]){
 		}
 		else if(algorithm_type == "1" && correct == true){
 			time_req = clock();
-			int greedy = kwf1(library,capacity);
+			int greedy = greedy1(library,capacity);
 			int maxProfit2 = greedy2(library,capacity,greedy);
-			float time;
-			time = (float)time_req;
-			output << num_items << " " << maxProfit2 << " " << time << " ";
+			//float time;
+			//time = (float)time_req;
+			output << num_items << " " << maxProfit2 << " " << time_req << " ";
 			for(vector<Item>::size_type p=0; p<result.size(); p++){
 				output << result[p].getId() << " ";
 			}
 			output << endl;
-			cout << "maxProfit from greedy 2 is " << maxProfit2 << endl;
 		}
 		else if(algorithm_type == "2"){
 			cout << "using backtracking algorithm" << endl;
