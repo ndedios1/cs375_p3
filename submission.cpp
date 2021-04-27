@@ -16,24 +16,40 @@ using namespace std;
 clock_t time_req;
 vector<Item> result;
 
-void kwf2(vector<Item> &v, int capacity, ofstream &output){
+int greedy2(vector<Item> &v, int capacity, int greedy_one){
 	cout << "went to kwf2" << endl;
+	int maxProfit= greedy_one;
+	Item maxItem;
+	bool found = false;
+	for(vector<Item>::size_type i = 0; i < v.size(); i++){
+		if(v[i].getProfit() > maxProfit && v[i].getWeight() <= capacity){
+			maxProfit = v[i].getProfit();
+			maxItem = v[i];
+			found = true;
+		}
+	}
+	if(found == true){
+		result.clear();
+		result.push_back(maxItem);
+	}
+	return maxProfit;
 
 }
-int kwf1(vector<Item> &v, int capacity, ofstream &output){
-	cout << "sorting" << endl;
+
+int kwf1(vector<Item> &v, int capacity){
 	//sorting ratio in vector
 	sort(v.begin(), v.end(), [](Item& lhs, Item& rhs){
 		return lhs.getRatio() > rhs.getRatio();
 	});
+	/**
 	for(vector<Item>::size_type i =0; i < v.size(); i++){
 		v[i].print();
-	}
+	}**/
 	int max = v.size();
 	int total_weight =0;
 	int total_profit =0;
 	for(int j = 0; j < max; j++){
-		if(total_weight < capacity && (total_weight+v[j].getWeight()) < capacity){
+		if(total_weight < capacity && (total_weight+v[j].getWeight()) <= capacity){
 			total_weight += v[j].getWeight();
 			total_profit += v[j].getProfit();
 			result.push_back(v[j]);
@@ -93,7 +109,7 @@ int main(int argc, char* argv[]){
 		if(algorithm_type == "0" && correct == true){
 			time_req = clock();
 			cout << "using greedy algorithm 1" << endl;
-			int maxProfit = kwf1(library,capacity,output);
+			int maxProfit = kwf1(library,capacity);
 			float time;
 			time = (float)time_req;
 			output << num_items << " " << maxProfit << " " << time << " ";
@@ -102,9 +118,18 @@ int main(int argc, char* argv[]){
 			}
 			output << endl;
 		}
-		else if(algorithm_type == "1"){
-			cout << "using greedy algorithm 2" << endl;
-			kwf2(library,capacity,output);
+		else if(algorithm_type == "1" && correct == true){
+			time_req = clock();
+			int greedy = kwf1(library,capacity);
+			int maxProfit2 = greedy2(library,capacity,greedy);
+			float time;
+			time = (float)time_req;
+			output << num_items << " " << maxProfit2 << " " << time << " ";
+			for(vector<Item>::size_type p=0; p<result.size(); p++){
+				output << result[p].getId() << " ";
+			}
+			output << endl;
+			cout << "maxProfit from greedy 2 is " << maxProfit2 << endl;
 		}
 		else if(algorithm_type == "2"){
 			cout << "using backtracking algorithm" << endl;
